@@ -1,0 +1,85 @@
+﻿<Page x:Class="TinkoffTask.Views.ProductsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:TinkoffTask.Views"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="using:TinkoffTask.Controls"
+      xmlns:converters="using:TinkoffTask.Converters"
+      xmlns:media="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:toolkitControls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      mc:Ignorable="d"
+      NavigationCacheMode="Enabled"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <converters:StringToColorConverter x:Key="StringToColorConverter" />
+
+        <DataTemplate x:Key="BenefitItemTemplate">
+            <TextBlock Text="{Binding Text}"
+                       Style="{StaticResource BodyTextBlockStyle}"
+                       Margin="0,12" />
+        </DataTemplate>
+    </Page.Resources>
+
+    <controls:ContentContainer State="{Binding ProductsState}"
+                               ReloadCommand="{Binding ReloadProducts}"
+                               ReloadButtonText="Повторить"
+                               LoadingText="Загрузка списка продуктов..."
+                               ErrorText="Не удалось загрузить список продуктов"
+                               NoDataText="В настоящее время нет доступных продуктов">
+        <Grid>
+            <controls:CarouselView ItemsSource="{Binding Products}"
+                                   SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                                   Command="{Binding NavigateToProduct, Mode=OneTime}"
+                                   VerticalAlignment="Top"
+                                   ItemWidth="750"
+                                   Height="450"
+                                   x:Name="Carousel">
+                <controls:CarouselView.Background>
+                    <media:AcrylicBrush BackgroundSource="HostBackdrop"
+                                        TintOpacity="0.8"
+                                        TintColor="{Binding SelectedProduct.BackgroundColor, Converter={StaticResource StringToColorConverter}}"
+                                        FallbackColor="{Binding SelectedProduct.BackgroundColor, Converter={StaticResource StringToColorConverter}}"
+                                        TintTransitionDuration="00:00:01" />
+                </controls:CarouselView.Background>
+                <controls:CarouselView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="75,100,75,50">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <toolkitControls:ImageEx Source="{Binding ImageUrl}"
+                                                     Width="300"/>
+                            <ListView ItemsSource="{Binding Benefits}"
+                                      Grid.Column="1"
+                                      Margin="24,0,0,0"
+                                      VerticalAlignment="Center"
+                                      IsHitTestVisible="False"
+                                      ItemTemplate="{StaticResource BenefitItemTemplate}" />
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.ColumnSpan="2"
+                                       HorizontalAlignment="Center"
+                                       Text="Коснитесь, чтобы узнать подробнее"
+                                       Style="{StaticResource BodyTextBlockStyle}" />
+                        </Grid>
+                    </DataTemplate>
+                </controls:CarouselView.ItemTemplate>
+            </controls:CarouselView>
+
+            <TextBlock Text="Карты Тинькофф"
+                       Style="{StaticResource HeaderTextBlockStyle}"
+                       HorizontalAlignment="Center"
+                       Margin="0,32,0,0"
+                       VerticalAlignment="Top"
+                       IsHitTestVisible="False" />
+        </Grid>
+    </controls:ContentContainer>
+</Page>

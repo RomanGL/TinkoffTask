@@ -120,6 +120,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ApplicationBase.cs" />
+    <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Models\ContentState.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Common\DelegateCommand{T}.cs" />

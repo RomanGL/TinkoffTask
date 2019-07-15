@@ -190,13 +190,32 @@ namespace TinkoffTask.Controls
 
         private void CarouselViewItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var dataContext = (sender as CarouselViewItem)?.DataContext;
-            if (dataContext != null)
+            int index = _items.IndexOf(sender as CarouselViewItem);
+            int diff = Math.Abs(index - _selectedItemIndex);
+
+            if (diff > 1)
             {
-                ItemClick?.Invoke(this, new CarouselViewItemClickEventArgs(dataContext));
-                if (Command != null && Command.CanExecute(dataContext))
+                return;
+            }
+
+            if (index >= GetIndexUpperBound(_selectedItemIndex + 1, _items.Length))
+            {
+                GoToNext();
+            }
+            else if (index <= GetIndexLowerBound(_selectedItemIndex - 1, _items.Length))
+            {
+                GoToPrevious();
+            }
+            else
+            {
+                var dataContext = (sender as CarouselViewItem)?.DataContext;
+                if (dataContext != null)
                 {
-                    Command.Execute(dataContext);
+                    ItemClick?.Invoke(this, new CarouselViewItemClickEventArgs(dataContext));
+                    if (Command != null && Command.CanExecute(dataContext))
+                    {
+                        Command.Execute(dataContext);
+                    }
                 }
             }
         }
